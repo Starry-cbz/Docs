@@ -7,45 +7,59 @@ on:
 
 jobs:
   lint:
-    runs-on: ubuntu-22.04  # Explicitly specify ubuntu version
+    runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v4
     - name: Use Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '20.x'
-        cache: 'npm'
     - name: Install dependencies
-      run: npm ci
+      run: |
+        npm install
+        npm ci
+    - name: Generate lock file if missing
+      run: |
+        if [ ! -f package-lock.json ]; then
+          npm install --package-lock-only
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git add package-lock.json
+          git commit -m "Add package-lock.json"
+          git push
+        fi
     - name: Run linter
       run: npm run lint
-      
+
   typecheck:
-    runs-on: ubuntu-22.04  # Explicitly specify ubuntu version
+    runs-on: ubuntu-22.04
+    needs: lint
     steps:
     - uses: actions/checkout@v4
     - name: Use Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '20.x'
-        cache: 'npm'
     - name: Install dependencies
-      run: npm ci
+      run: |
+        npm install
+        npm ci
     - name: Run type checking
       run: npm run typecheck
 
   build:
-    runs-on: ubuntu-22.04  # Explicitly specify ubuntu version
-    needs: [lint, typecheck]  # Only build if lint and typecheck pass
+    runs-on: ubuntu-22.04
+    needs: [lint, typecheck]
     steps:
     - uses: actions/checkout@v4
     - name: Use Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '20.x'
-        cache: 'npm'
     - name: Install dependencies
-      run: npm ci
+      run: |
+        npm install
+        npm ci
     - name: Build
       run: npm run build
     - name: Upload build artifacts
@@ -53,11 +67,11 @@ jobs:
       with:
         name: build-output
         path: .next/
-        
+
   deploy:
-    runs-on: ubuntu-22.04  # Explicitly specify ubuntu version
-    needs: build  # Only deploy if build succeeds
-    if: github.ref == 'refs/heads/main'  # Only deploy on main branch
+    runs-on: ubuntu-22.04
+    needs: build
+    if: github.ref == 'refs/heads/main'
     steps:
     - uses: actions/checkout@v4
     - name: Download build artifacts
