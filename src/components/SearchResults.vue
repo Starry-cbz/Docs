@@ -1,11 +1,10 @@
-<!-- v1.6 -->
 <template>
   <div class="search-results mt-6">
     <h2 class="text-2xl font-bold mb-4">Search Results</h2>
     <ul v-if="results.length > 0" role="listbox">
       <li 
         v-for="(result, index) in results" 
-        :key="result.url" 
+        :key="result.id" 
         :class="['mb-4 p-4 rounded-lg transition-colors duration-200', { 'bg-blue-100 dark:bg-blue-900': index === selectedIndex }]"
         @click="$emit('resultSelect', result)"
         @mouseover="$emit('resultHover', index)"
@@ -15,7 +14,7 @@
         @keydown.enter="$emit('resultSelect', result)"
       >
         <a :href="result.url" class="text-blue-500 hover:underline dark:text-blue-300 text-lg font-semibold">{{ result.title }}</a>
-        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">{{ result.snippet }}</p>
+        <p v-if="result.snippet" class="text-sm text-gray-600 dark:text-gray-400 mt-1">{{ result.snippet }}</p>
         <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">{{ result.url }}</p>
       </li>
     </ul>
@@ -24,14 +23,15 @@
   </div>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
+<script lang="ts">
+import { defineComponent, PropType } from 'vue'
+import type { SearchResult } from '@/types/search'
 
 export default defineComponent({
   name: 'SearchResults',
   props: {
     results: {
-      type: Array,
+      type: Array as PropType<SearchResult[]>,
       required: true
     },
     searched: {

@@ -1,4 +1,3 @@
-<!-- v1.6 -->
 <template>
   <div class="search-bar relative">
     <input
@@ -18,30 +17,41 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, ref, watch } from 'vue'
 import debounce from 'lodash/debounce'
 import { Spinner } from '@/components/ui/spinner'
+import type { SearchBarProps } from '@/types/search'
 
 export default defineComponent({
   name: 'SearchBar',
   components: {
     Spinner
   },
+  props: {
+    onSearch: {
+      type: Function as () => SearchBarProps['onSearch'],
+      required: true
+    }
+  },
   emits: ['search', 'next', 'previous', 'select'],
-  setup(props, { emit }) {
+  setup(props) {
     const query = ref('')
     const isLoading = ref(false)
 
     const debouncedSearch = debounce(() => {
       if (query.value.length >= 2) {
         isLoading.value = true
-        emit('search', query.value)
+        props.onSearch(query.value).finally(() => {
+          isLoading.value = false
+        })
       }
     }, 300)
 
     const handleEnter = () => {
-      emit('select')
+      if (query.value) {
+        props.onSearch(query.value)
+      }
     }
 
     watch(query, () => {
