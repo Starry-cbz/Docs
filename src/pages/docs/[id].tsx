@@ -1,6 +1,4 @@
-// v1.0
 import { GetStaticProps, GetStaticPaths } from 'next'
-import { useState } from 'react'
 import Head from 'next/head'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
@@ -30,8 +28,6 @@ interface DocumentPageProps {
 
 export default function DocumentPage({ document }: DocumentPageProps) {
   const router = useRouter()
-  // Remove these lines:
-  // const [isLoading, setIsLoading] = useState(false)
 
   if (router.isFallback) {
     return <div className="flex justify-center items-center h-screen"><Spinner /></div>

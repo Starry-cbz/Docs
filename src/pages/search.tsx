@@ -1,4 +1,3 @@
-// v1.6
 import { useState, useCallback, KeyboardEvent, useRef, useEffect } from 'react'
 import Head from 'next/head'
 import dynamic from 'next/dynamic'
@@ -79,7 +78,11 @@ const SearchPage = () => {
           type: 'website',
         }}
       />
-      <div className="container mx-auto px-4" onKeyDown={handleKeyDown}>
+      <div 
+        className="container mx-auto px-4" 
+        role="search"
+        aria-label="Documentation search"
+      >
         <Head>
           <title>Docs - Search</title>
           <meta name="description" content="Search documentation" />
@@ -93,21 +96,22 @@ const SearchPage = () => {
               <Spinner />
             </div>
           ) : error ? (
-            <div className="text-center text-red-500 mt-4">{error}</div>
+            <div className="text-center text-red-500 mt-4" role="alert">
+              {error}
+            </div>
           ) : (
-            <div ref={searchResultsRef}>
-              <div 
-                role="listbox"
-                className="search-results mt-6"
+            <div 
+              ref={searchResultsRef}
+              role="region"
+              aria-label="Search results"
+            >
+              <SearchResults 
+                results={results} 
+                selectedIndex={selectedIndex}
+                onResultSelect={handleResultSelect}
                 onKeyDown={handleKeyDown}
                 tabIndex={0}
-              >
-                <SearchResults 
-                  results={results} 
-                  selectedIndex={selectedIndex}
-                  onResultSelect={handleResultSelect}
-                />
-              </div>
+              />
             </div>
           )}
         </main>
