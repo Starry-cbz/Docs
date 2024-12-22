@@ -25,7 +25,13 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import type { SearchResult } from '@/types/search'
+
+interface SearchResult {
+  id: string;
+  title: string;
+  url: string;
+  snippet?: string;
+}
 
 export default defineComponent({
   name: 'SearchResults',

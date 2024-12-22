@@ -21,7 +21,6 @@
 import { defineComponent, ref, watch } from 'vue'
 import debounce from 'lodash/debounce'
 import { Spinner } from '@/components/ui/spinner'
-import type { SearchBarProps } from '@/types/search'
 
 export default defineComponent({
   name: 'SearchBar',
@@ -30,11 +29,11 @@ export default defineComponent({
   },
   props: {
     onSearch: {
-      type: Function as () => SearchBarProps['onSearch'],
+      type: Function as PropType<(query: string) => Promise<void>>,
       required: true
     }
   },
-  emits: ['search', 'next', 'previous', 'select'],
+  emits: ['next', 'previous', 'select'],
   setup(props) {
     const query = ref('')
     const isLoading = ref(false)
