@@ -96,11 +96,18 @@ const SearchPage = () => {
             <div className="text-center text-red-500 mt-4">{error}</div>
           ) : (
             <div ref={searchResultsRef}>
-              <SearchResults 
-                results={results} 
-                selectedIndex={selectedIndex}
-                onResultSelect={handleResultSelect}
-              />
+              <div 
+                role="listbox"
+                className="search-results mt-6"
+                onKeyDown={handleKeyDown}
+                tabIndex={0}
+              >
+                <SearchResults 
+                  results={results} 
+                  selectedIndex={selectedIndex}
+                  onResultSelect={handleResultSelect}
+                />
+              </div>
             </div>
           )}
         </main>

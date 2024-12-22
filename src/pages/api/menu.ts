@@ -3,6 +3,12 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import fs from 'fs'
 import path from 'path'
 
+interface MenuItem {
+  title: string;
+  children?: MenuItem[];
+  url?: string;
+}
+
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const docsDir = path.join(process.cwd(), 'public', 'docs')
   const menuItems = generateMenuItems(docsDir)
@@ -10,8 +16,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   res.status(200).json({ menuItems })
 }
 
-function generateMenuItems(dir: string, basePath: string = '/docs'): any[] {
-  const items = []
+function generateMenuItems(dir: string, basePath: string = '/docs'): MenuItem[] {
+  const items: MenuItem[] = []
 
   const files = fs.readdirSync(dir)
 

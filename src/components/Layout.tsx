@@ -83,8 +83,11 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             <button onClick={toggleTheme} className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none" aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}>
               {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </button>
-            <Link href="/search">
-              <a className="ml-4 text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white">Search</a>
+            <Link 
+              href="/search" 
+              className="ml-4 text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white"
+            >
+              Search
             </Link>
           </div>
         </header>

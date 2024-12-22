@@ -17,8 +17,8 @@ export const RecentDocs: React.FC<RecentDocsProps> = ({ docs }) => {
     <ul className="space-y-2">
       {docs.map((doc) => (
         <li key={doc.id}>
-          <Link href={`/docs/${doc.path}`}>
-            <a className="text-blue-500 hover:underline">{doc.title}</a>
+          <Link href={`/docs/${doc.path}`} className="text-blue-500 hover:underline">
+            {doc.title}
           </Link>
         </li>
       ))}

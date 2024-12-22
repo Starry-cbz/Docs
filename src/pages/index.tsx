@@ -52,10 +52,11 @@ const Home: NextPage = () => {
         </div>
 
         <div className="mt-12">
-          <Link href="/docs">
-            <a className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300">
-              Browse All Documentation
-            </a>
+          <Link 
+            href="/docs" 
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300"
+          >
+            Browse All Documentation
           </Link>
         </div>
       </main>

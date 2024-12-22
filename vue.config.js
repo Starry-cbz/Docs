@@ -1,14 +1,14 @@
-// v1.0
-const { defineConfig } = require('@vue/cli-service')
+import { defineConfig } from '@vue/cli-service'
+import pathBrowserify from 'path-browserify'
 
-module.exports = defineConfig({
+export default defineConfig({
   transpileDependencies: true,
   lintOnSave: false,
   configureWebpack: {
     resolve: {
       fallback: {
         fs: false,
-        path: require.resolve('path-browserify'),
+        path: pathBrowserify,
       },
     },
   },
