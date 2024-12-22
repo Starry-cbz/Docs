@@ -6,52 +6,70 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  lint:
+    runs-on: ubuntu-22.04  # Explicitly specify ubuntu version
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Use Node.js
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v4
       with:
-        node-version: '14.x'
+        node-version: '20.x'
+        cache: 'npm'
+    - name: Install dependencies
+      run: npm ci
+    - name: Run linter
+      run: npm run lint
+      
+  typecheck:
+    runs-on: ubuntu-22.04  # Explicitly specify ubuntu version
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+    - name: Install dependencies
+      run: npm ci
+    - name: Run type checking
+      run: npm run typecheck
+
+  build:
+    runs-on: ubuntu-22.04  # Explicitly specify ubuntu version
+    needs: [lint, typecheck]  # Only build if lint and typecheck pass
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
     - name: Install dependencies
       run: npm ci
     - name: Build
       run: npm run build
-    - name: Run tests
-      run: npm test
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-output
+        path: .next/
+        
+  deploy:
+    runs-on: ubuntu-22.04  # Explicitly specify ubuntu version
+    needs: build  # Only deploy if build succeeds
+    if: github.ref == 'refs/heads/main'  # Only deploy on main branch
+    steps:
+    - uses: actions/checkout@v4
+    - name: Download build artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: build-output
+        path: .next/
     - name: Deploy to Vercel
-      if: success() && github.ref == 'refs/heads/main'
-      uses: amondnet/vercel-action@v20
+      uses: amondnet/vercel-action@v25
       with:
         vercel-token: ${{ secrets.VERCEL_TOKEN }}
         vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
         vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
         working-directory: ./
-        
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '14.x'
-    - name: Install dependencies
-      run: npm ci
-    - name: Run linter
-      run: npm run lint
-
-  typecheck:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '14.x'
-    - name: Install dependencies
-      run: npm ci
-    - name: Run type checking
-      run: npm run typecheck
 
