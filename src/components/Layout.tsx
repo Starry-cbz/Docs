@@ -1,4 +1,3 @@
-// v1.6
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
@@ -6,17 +5,23 @@ import { Spinner } from '@/components/ui/spinner'
 import { useTheme } from 'next-themes'
 import { Menu, X, Sun, Moon } from 'lucide-react'
 
-const ThemeToggler = dynamic(() => import('./ThemeToggler').then(mod => mod.default), { 
+const ThemeToggler = dynamic(() => import('./ThemeToggler'), { 
   ssr: false,
   loading: () => <Spinner />
 })
-const SidebarMenu = dynamic(() => import('./SidebarMenu').then(mod => mod.default), { 
+const SidebarMenu = dynamic(() => import('./SidebarMenu'), { 
   ssr: false,
   loading: () => <Spinner />
 })
 
+interface MenuItem {
+  title: string;
+  url?: string;
+  children?: MenuItem[];
+}
+
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [menuItems, setMenuItems] = useState([])
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -83,10 +88,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             <button onClick={toggleTheme} className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none" aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}>
               {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </button>
-            <Link 
-              href="/search" 
-              className="ml-4 text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white"
-            >
+            <Link href="/search" className="ml-4 text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white">
               Search
             </Link>
           </div>

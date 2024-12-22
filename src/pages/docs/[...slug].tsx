@@ -1,4 +1,3 @@
-// v1.4
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import { useState, useEffect } from 'react'
@@ -6,7 +5,7 @@ import dynamic from 'next/dynamic'
 import { Spinner } from '@/components/ui/spinner'
 import { NextSeo } from 'next-seo'
 
-const MarkdownRenderer = dynamic(() => import('../../components/MarkdownRenderer.vue').then(mod => mod.default), { 
+const MarkdownRenderer = dynamic(() => import('../../components/MarkdownRenderer'), { 
   ssr: false,
   loading: () => <Spinner />
 })

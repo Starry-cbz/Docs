@@ -1,4 +1,3 @@
-// v1.3
 import { createApp, App as VueApp } from 'vue'
 import { createRouter, createMemoryHistory, RouteRecordRaw } from 'vue-router'
 
